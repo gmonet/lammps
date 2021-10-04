@@ -1,3 +1,25 @@
+Custom fork of LAMMPS' stable branch to make it output the coulombian 
+component of the force (or the electric field if you divide it by the charge).
+
+Like the force applied on each atoms (accessible through keyword 'f'),
+the couloumbian component is accessible with the keyword 'fcoul'.
+
+Compatible with :
+- verlet integrator
+- pair/lj/cut/coul/long of KSPACE
+- pppm and ewald
+- dump/custom and dump/netcdf (fcoulx, fcouly, fcoulz)
+- fix/efield
+- fix/ave/atom
+
+Adapted from [How to make LAMMPS output electric fields](https://sjbyrnes.com/OutputElectricForceInLAMMPS.html) by Steve Byrnes.
+
+----------------------------------------------------------------------
+
+ORIGINAL README :
+
+----------------------------------------------------------------------
+
 This is the LAMMPS software package.
 
 LAMMPS stands for Large-scale Atomic/Molecular Massively Parallel

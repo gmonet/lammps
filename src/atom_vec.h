@@ -183,6 +183,7 @@ class AtomVec : protected Pointers {
   int *type, *mask;
   imageint *image;
   double **x, **v, **f;
+  double **fcoul; // MY-CODE
 
   // standard list of peratom fields always operated on by different methods
   // common to all styles, so not listed in field strings

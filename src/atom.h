@@ -165,6 +165,9 @@ class Atom : protected Pointers {
 
   double *area, *ed, *em, *epsilon, *curvature, *q_unscaled;
 
+  // MY-CODE
+  double **fcoul;
+  
   // end of customization section
   // --------------------------------------------------------------------
 

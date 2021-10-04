@@ -54,13 +54,14 @@ AtomVec::AtomVec(LAMMPS *lmp) : Pointers(lmp)
   type = mask = nullptr;
   image = nullptr;
   x = v = f = nullptr;
+  fcoul = nullptr;
 
   threads = nullptr;
 
   // peratom variables auto-included in corresponding child style fields string
   // these fields cannot be specified in the fields string
 
-  default_grow = "id type mask image x v f";
+  default_grow = "id type mask image x v f fcoul";
   default_copy = "id type mask image x v";
   default_comm = "x";
   default_comm_vel = "x v";
@@ -217,6 +218,7 @@ void AtomVec::grow(int n)
   x = memory->grow(atom->x,nmax,3,"atom:x");
   v = memory->grow(atom->v,nmax,3,"atom:v");
   f = memory->grow(atom->f,nmax*comm->nthreads,3,"atom:f");
+  fcoul = memory->grow(atom->fcoul,nmax*comm->nthreads,3,"atom:fcoul");
 
   for (int i = 0; i < ngrow; i++) {
     pdata = mgrow.pdata[i];
@@ -688,6 +690,7 @@ void AtomVec::unpack_comm_vel(int n, int first, double *buf)
 
 int AtomVec::pack_reverse(int n, int first, double *buf)
 {
+  fputs("vec_full.cpp: Warning: E-fields may not be accurate! Did you remember to turn off newton in your script?\n", screen);
   int i,m,last,mm,nn,datatype,cols;
   void *pdata;
 
@@ -754,6 +757,7 @@ int AtomVec::pack_reverse(int n, int first, double *buf)
 
 void AtomVec::unpack_reverse(int n, int *list, double *buf)
 {
+  fputs("atom_vec.cpp: Warning: E-fields may not be accurate! Did you remember to turn off newton in your script?\n", screen);
   int i,j,m,mm,nn,datatype,cols;
   void *pdata;
 
@@ -2291,6 +2295,7 @@ double AtomVec::memory_usage()
   bytes += memory->usage(x,nmax,3);
   bytes += memory->usage(v,nmax,3);
   bytes += memory->usage(f,nmax*comm->nthreads,3);
+  bytes += memory->usage(fcoul,nmax*comm->nthreads,3);
 
   for (int i = 0; i < ngrow; i++) {
     pdata = mgrow.pdata[i];

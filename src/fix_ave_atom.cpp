@@ -94,6 +94,16 @@ FixAveAtom::FixAveAtom(LAMMPS *lmp, int narg, char **arg) :
       which[i] = ArgInfo::F;
       argindex[i] = 2;
 
+    } else if (strcmp(arg[i],"fcoulx") == 0) {
+      which[i] = ArgInfo::F;
+      argindex[i] = 0;
+    } else if (strcmp(arg[i],"fcouly") == 0) {
+      which[i] = ArgInfo::F;
+      argindex[i] = 1;
+    } else if (strcmp(arg[i],"fcoulz") == 0) {
+      which[i] = ArgInfo::F;
+      argindex[i] = 2;
+
     } else {
       ArgInfo argi(arg[i]);
 

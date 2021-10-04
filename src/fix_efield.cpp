@@ -243,6 +243,7 @@ void FixEfield::min_setup(int vflag)
 void FixEfield::post_force(int vflag)
 {
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
   double *q = atom->q;
   int *mask = atom->mask;
   imageint *image = atom->image;
@@ -296,6 +297,9 @@ void FixEfield::post_force(int vflag)
           f[i][0] += fx;
           f[i][1] += fy;
           f[i][2] += fz;
+          fcoul[i][0] += fx;
+          fcoul[i][1] += fy;
+          fcoul[i][2] += fz;
 
           domain->unmap(x[i],image[i],unwrap);
           fsum[0] -= fx*unwrap[0]+fy*unwrap[1]+fz*unwrap[2];
@@ -365,14 +369,17 @@ void FixEfield::post_force(int vflag)
           if (xstyle == ATOM) fx = qe2f * q[i]*efield[i][0];
           else fx = q[i]*ex;
           f[i][0] += fx;
+          fcoul[i][0] += fx;
           fsum[1] += fx;
           if (ystyle == ATOM) fy = qe2f * q[i]*efield[i][1];
           else fy = q[i]*ey;
           f[i][1] += fy;
+          fcoul[i][1] += fy;
           fsum[2] += fy;
           if (zstyle == ATOM) fz = qe2f * q[i]*efield[i][2];
           else fz = q[i]*ez;
           f[i][2] += fz;
+          fcoul[i][2] += fz;
           fsum[3] += fz;
           if (estyle == ATOM) fsum[0] += efield[0][3];
         }
