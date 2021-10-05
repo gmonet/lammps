@@ -126,7 +126,7 @@ DumpNetCDF::DumpNetCDF(LAMMPS *lmp, int narg, char **arg) :
       ndims = 3;
       mangled = "forces";
     } else if ((mangled == "fcoulx") || (mangled == "fcouly") || (mangled == "fcoulz")) {
-      idim = mangled[1] - 'x';
+      idim = mangled[5] - 'x';
       ndims = 3;
       mangled = "forces_coul";
     } else if ((mangled == "mux") || (mangled == "muy") || (mangled == "muz")) {
