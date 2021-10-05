@@ -2415,6 +2415,7 @@ void PPPM::fieldforce_ik()
   double *q = atom->q;
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
 
   int nlocal = atom->nlocal;
 
@@ -2451,6 +2452,9 @@ void PPPM::fieldforce_ik()
     f[i][0] += qfactor*ekx;
     f[i][1] += qfactor*eky;
     if (slabflag != 2) f[i][2] += qfactor*ekz;
+    fcoul[i][0] += qfactor*ekx;
+    fcoul[i][1] += qfactor*eky;
+    if (slabflag != 2) fcoul[i][2] += qfactor*ekz;
   }
 }
 
@@ -2485,6 +2489,7 @@ void PPPM::fieldforce_ad()
   double *q = atom->q;
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
 
   int nlocal = atom->nlocal;
 
@@ -2527,17 +2532,19 @@ void PPPM::fieldforce_ad()
     sf += sf_coeff[1]*sin(4*MY_PI*s1);
     sf *= 2*q[i]*q[i];
     f[i][0] += qfactor*(ekx*q[i] - sf);
+    fcoul[i][0] += qfactor*(ekx*q[i] - sf);
 
     sf = sf_coeff[2]*sin(2*MY_PI*s2);
     sf += sf_coeff[3]*sin(4*MY_PI*s2);
     sf *= 2*q[i]*q[i];
     f[i][1] += qfactor*(eky*q[i] - sf);
-
+    fcoul[i][1] += qfactor*(eky*q[i] - sf);
 
     sf = sf_coeff[4]*sin(2*MY_PI*s3);
     sf += sf_coeff[5]*sin(4*MY_PI*s3);
     sf *= 2*q[i]*q[i];
     if (slabflag != 2) f[i][2] += qfactor*(ekz*q[i] - sf);
+    if (slabflag != 2) fcoul[i][2] += qfactor*(ekz*q[i] - sf);
   }
 }
 
@@ -2966,8 +2973,12 @@ void PPPM::slabcorr()
 
   double ffact = qscale * (-4.0*MY_PI/volume);
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
 
-  for (int i = 0; i < nlocal; i++) f[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+  for (int i = 0; i < nlocal; i++) {
+    f[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+    fcoul[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+    }
 }
 
 /* ----------------------------------------------------------------------

@@ -121,6 +121,16 @@ ComputeReduce::ComputeReduce(LAMMPS *lmp, int narg, char **arg) :
       which[nvalues] = ArgInfo::F;
       argindex[nvalues++] = 2;
 
+    } else if (strcmp(arg[iarg],"fcoulx") == 0) {
+      which[nvalues] = ArgInfo::F;
+      argindex[nvalues++] = 0;
+    } else if (strcmp(arg[iarg],"fcouly") == 0) {
+      which[nvalues] = ArgInfo::F;
+      argindex[nvalues++] = 1;
+    } else if (strcmp(arg[iarg],"fcoulz") == 0) {
+      which[nvalues] = ArgInfo::F;
+      argindex[nvalues++] = 2;
+
     } else {
 
       ArgInfo argi(arg[iarg]);

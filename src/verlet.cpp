@@ -387,6 +387,7 @@ void Verlet::force_clear()
 
     if (nbytes) {
       memset(&atom->f[0][0],0,3*nbytes);
+      memset(&atom->fcoul[0][0],0,3*nbytes);
       if (torqueflag) memset(&atom->torque[0][0],0,3*nbytes);
       if (extraflag) atom->avec->force_clear(0,nbytes);
     }
@@ -400,6 +401,7 @@ void Verlet::force_clear()
 
     if (nbytes) {
       memset(&atom->f[0][0],0,3*nbytes);
+      memset(&atom->fcoul[0][0],0,3*nbytes);
       if (torqueflag) memset(&atom->torque[0][0],0,3*nbytes);
       if (extraflag) atom->avec->force_clear(0,nbytes);
     }
@@ -409,6 +411,7 @@ void Verlet::force_clear()
 
       if (nbytes) {
         memset(&atom->f[nlocal][0],0,3*nbytes);
+        memset(&atom->fcoul[nlocal][0],0,3*nbytes);
         if (torqueflag) memset(&atom->torque[nlocal][0],0,3*nbytes);
         if (extraflag) atom->avec->force_clear(nlocal,nbytes);
       }

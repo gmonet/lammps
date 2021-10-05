@@ -120,7 +120,12 @@ ComputePropertyAtom::ComputePropertyAtom(LAMMPS *lmp, int narg, char **arg) :
       pack_choice[i] = &ComputePropertyAtom::pack_fy;
     } else if (strcmp(arg[iarg],"fz") == 0) {
       pack_choice[i] = &ComputePropertyAtom::pack_fz;
-
+    } else if (strcmp(arg[iarg],"fcoulx") == 0) {
+      pack_choice[i] = &ComputePropertyAtom::pack_fcoulx;
+    } else if (strcmp(arg[iarg],"fcouly") == 0) {
+      pack_choice[i] = &ComputePropertyAtom::pack_fcouly;
+    } else if (strcmp(arg[iarg],"fcoulz") == 0) {
+      pack_choice[i] = &ComputePropertyAtom::pack_fcoulz;
     } else if (strcmp(arg[iarg],"q") == 0) {
       if (!atom->q_flag)
         error->all(FLERR,"Compute property/atom for atom property that isn't allocated");
@@ -966,6 +971,50 @@ void ComputePropertyAtom::pack_fz(int n)
   }
 }
 
+/* ---------------------------------------------------------------------- */
+
+void ComputePropertyAtom::pack_fcoulx(int n)
+{
+  double **fcoul = atom->fcoul;
+  int *mask = atom->mask;
+  int nlocal = atom->nlocal;
+
+  for (int i = 0; i < nlocal; i++) {
+    if (mask[i] & groupbit) buf[n] = fcoul[i][0];
+    else buf[n] = 0.0;
+    n += nvalues;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void ComputePropertyAtom::pack_fcouly(int n)
+{
+  double **fcoul = atom->fcoul;
+  int *mask = atom->mask;
+  int nlocal = atom->nlocal;
+
+  for (int i = 0; i < nlocal; i++) {
+    if (mask[i] & groupbit) buf[n] = fcoul[i][1];
+    else buf[n] = 0.0;
+    n += nvalues;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void ComputePropertyAtom::pack_fcoulz(int n)
+{
+  double **fcoul = atom->fcoul;
+  int *mask = atom->mask;
+  int nlocal = atom->nlocal;
+
+  for (int i = 0; i < nlocal; i++) {
+    if (mask[i] & groupbit) buf[n] = fcoul[i][2];
+    else buf[n] = 0.0;
+    n += nvalues;
+  }
+}
 /* ---------------------------------------------------------------------- */
 
 void ComputePropertyAtom::pack_q(int n)

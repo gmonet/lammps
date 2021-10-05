@@ -97,6 +97,7 @@ void PairLJCutCoulLong::compute(int eflag, int vflag)
 
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul; // MY-CODE
   double *q = atom->q;
   int *type = atom->type;
   int nlocal = atom->nlocal;
@@ -178,6 +179,18 @@ void PairLJCutCoulLong::compute(int eflag, int vflag)
           f[j][1] -= dely*fpair;
           f[j][2] -= delz*fpair;
         }
+        
+        // my code: fcoul stores the Coulomb contribution to force
+        fcoul[i][0] += delx * forcecoul * r2inv;
+        fcoul[i][1] += dely * forcecoul * r2inv;
+        fcoul[i][2] += delz * forcecoul * r2inv;
+        if (newton_pair || j < nlocal) {
+          fcoul[j][0] -= delx * forcecoul * r2inv;
+          fcoul[j][1] -= dely * forcecoul * r2inv;
+          fcoul[j][2] -= delz * forcecoul * r2inv;
+        }
+        // end my code
+
 
         if (eflag) {
           if (rsq < cut_coulsq) {
@@ -218,6 +231,7 @@ void PairLJCutCoulLong::compute_inner()
 
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul; // MY-CODE
   double *q = atom->q;
   int *type = atom->type;
   int nlocal = atom->nlocal;
@@ -286,6 +300,16 @@ void PairLJCutCoulLong::compute_inner()
           f[j][1] -= dely*fpair;
           f[j][2] -= delz*fpair;
         }
+        // my code: fcoul stores the Coulomb contribution to force
+        fcoul[i][0] += delx * forcecoul * r2inv;
+        fcoul[i][1] += dely * forcecoul * r2inv;
+        fcoul[i][2] += delz * forcecoul * r2inv;
+        if (newton_pair || j < nlocal) {
+          fcoul[j][0] -= delx * forcecoul * r2inv;
+          fcoul[j][1] -= dely * forcecoul * r2inv;
+          fcoul[j][2] -= delz * forcecoul * r2inv;
+        }
+        // end my code
       }
     }
   }
@@ -303,6 +327,7 @@ void PairLJCutCoulLong::compute_middle()
 
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
   double *q = atom->q;
   int *type = atom->type;
   int nlocal = atom->nlocal;
@@ -380,6 +405,16 @@ void PairLJCutCoulLong::compute_middle()
           f[j][1] -= dely*fpair;
           f[j][2] -= delz*fpair;
         }
+        // my code: fcoul stores the Coulomb contribution to force
+        fcoul[i][0] += delx * forcecoul * r2inv;
+        fcoul[i][1] += dely * forcecoul * r2inv;
+        fcoul[i][2] += delz * forcecoul * r2inv;
+        if (newton_pair || j < nlocal) {
+          fcoul[j][0] -= delx * forcecoul * r2inv;
+          fcoul[j][1] -= dely * forcecoul * r2inv;
+          fcoul[j][2] -= delz * forcecoul * r2inv;
+        }
+        // end my code
       }
     }
   }
@@ -403,6 +438,7 @@ void PairLJCutCoulLong::compute_outer(int eflag, int vflag)
 
   double **x = atom->x;
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
   double *q = atom->q;
   int *type = atom->type;
   int nlocal = atom->nlocal;
@@ -507,6 +543,16 @@ void PairLJCutCoulLong::compute_outer(int eflag, int vflag)
           f[j][1] -= dely*fpair;
           f[j][2] -= delz*fpair;
         }
+        // my code: fcoul stores the Coulomb contribution to force
+        fcoul[i][0] += delx * forcecoul * r2inv;
+        fcoul[i][1] += dely * forcecoul * r2inv;
+        fcoul[i][2] += delz * forcecoul * r2inv;
+        if (newton_pair || j < nlocal) {
+          fcoul[j][0] -= delx * forcecoul * r2inv;
+          fcoul[j][1] -= dely * forcecoul * r2inv;
+          fcoul[j][2] -= delz * forcecoul * r2inv;
+        }
+        // end my code
 
         if (eflag) {
           if (rsq < cut_coulsq) {

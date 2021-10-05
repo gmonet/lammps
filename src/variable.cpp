@@ -4496,6 +4496,9 @@ void Variable::peratom2global(int flag, char *word,
       else if (strcmp(word,"fx") == 0) mine = atom->f[index][0];
       else if (strcmp(word,"fy") == 0) mine = atom->f[index][1];
       else if (strcmp(word,"fz") == 0) mine = atom->f[index][2];
+      else if (strcmp(word,"fcoulx") == 0) mine = atom->fcoul[index][0];
+      else if (strcmp(word,"fcouly") == 0) mine = atom->fcoul[index][1];
+      else if (strcmp(word,"fcoulz") == 0) mine = atom->fcoul[index][2];
       else if (strcmp(word,"q") == 0) {
         if (!atom->q_flag)
           error->one(FLERR,"Variable uses atom property that isn't allocated");
@@ -4540,6 +4543,9 @@ int Variable::is_atom_vector(char *word)
   if (strcmp(word,"fx") == 0) return 1;
   if (strcmp(word,"fy") == 0) return 1;
   if (strcmp(word,"fz") == 0) return 1;
+  if (strcmp(word,"fcoulx") == 0) return 1;
+  if (strcmp(word,"fcouly") == 0) return 1;
+  if (strcmp(word,"fcoulz") == 0) return 1;
   if (strcmp(word,"q") == 0) return 1;
   return 0;
 }
@@ -4609,6 +4615,9 @@ void Variable::atom_vector(char *word, Tree **tree,
   else if (strcmp(word,"fx") == 0) newtree->array = &atom->f[0][0];
   else if (strcmp(word,"fy") == 0) newtree->array = &atom->f[0][1];
   else if (strcmp(word,"fz") == 0) newtree->array = &atom->f[0][2];
+  else if (strcmp(word,"fcoulx") == 0) newtree->array = &atom->fcoul[0][0];
+  else if (strcmp(word,"fcouly") == 0) newtree->array = &atom->fcoul[0][1];
+  else if (strcmp(word,"fcoulz") == 0) newtree->array = &atom->fcoul[0][2];
 
   else if (strcmp(word,"q") == 0) {
     newtree->nstride = 1;

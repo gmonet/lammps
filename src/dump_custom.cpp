@@ -40,7 +40,7 @@ enum{ID,MOL,PROC,PROCP1,TYPE,ELEMENT,MASS,
      X,Y,Z,XS,YS,ZS,XSTRI,YSTRI,ZSTRI,XU,YU,ZU,XUTRI,YUTRI,ZUTRI,
      XSU,YSU,ZSU,XSUTRI,YSUTRI,ZSUTRI,
      IX,IY,IZ,
-     VX,VY,VZ,FX,FY,FZ,
+     VX,VY,VZ,FX,FY,FZ,FCOULX,FCOULY,FCOULZ,
      Q,MUX,MUY,MUZ,MU,RADIUS,DIAMETER,
      OMEGAX,OMEGAY,OMEGAZ,ANGMOMX,ANGMOMY,ANGMOMZ,
      TQX,TQY,TQZ,
@@ -906,7 +906,15 @@ int DumpCustom::count()
       } else if (thresh_array[ithresh] == FZ) {
         ptr = &atom->f[0][2];
         nstride = 3;
-
+      } else if (thresh_array[ithresh] == FCOULX) {
+        ptr = &atom->fcoul[0][0];
+        nstride = 3;
+      } else if (thresh_array[ithresh] == FCOULY) {
+        ptr = &atom->fcoul[0][1];
+        nstride = 3;
+      } else if (thresh_array[ithresh] == FCOULZ) {
+        ptr = &atom->fcoul[0][2];
+        nstride = 3;
       } else if (thresh_array[ithresh] == Q) {
         if (!atom->q_flag)
           error->all(FLERR,
@@ -1364,6 +1372,15 @@ int DumpCustom::parse_fields(int narg, char **arg)
       vtype[iarg] = Dump::DOUBLE;
     } else if (strcmp(arg[iarg],"fz") == 0) {
       pack_choice[iarg] = &DumpCustom::pack_fz;
+      vtype[iarg] = Dump::DOUBLE;
+    } else if (strcmp(arg[iarg],"fcoulx") == 0) {
+      pack_choice[iarg] = &DumpCustom::pack_fcoulx;
+      vtype[iarg] = Dump::DOUBLE;
+    } else if (strcmp(arg[iarg],"fcouly") == 0) {
+      pack_choice[iarg] = &DumpCustom::pack_fcouly;
+      vtype[iarg] = Dump::DOUBLE;
+    } else if (strcmp(arg[iarg],"fcoulz") == 0) {
+      pack_choice[iarg] = &DumpCustom::pack_fcoulz;
       vtype[iarg] = Dump::DOUBLE;
 
     } else if (strcmp(arg[iarg],"q") == 0) {
@@ -2704,6 +2721,41 @@ void DumpCustom::pack_fz(int n)
   }
 }
 
+/* ---------------------------------------------------------------------- */
+
+void DumpCustom::pack_fcoulx(int n)
+{
+  double **fcoul = atom->fcoul;
+
+  for (int i = 0; i < nchoose; i++) {
+    buf[n] = fcoul[clist[i]][0];
+    n += size_one;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void DumpCustom::pack_fcouly(int n)
+{
+  double **fcoul = atom->fcoul;
+
+  for (int i = 0; i < nchoose; i++) {
+    buf[n] = fcoul[clist[i]][1];
+    n += size_one;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void DumpCustom::pack_fcoulz(int n)
+{
+  double **fcoul = atom->fcoul;
+
+  for (int i = 0; i < nchoose; i++) {
+    buf[n] = fcoul[clist[i]][2];
+    n += size_one;
+  }
+}
 /* ---------------------------------------------------------------------- */
 
 void DumpCustom::pack_q(int n)

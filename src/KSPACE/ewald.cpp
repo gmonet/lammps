@@ -395,6 +395,7 @@ void Ewald::compute(int eflag, int vflag)
   // perform per-atom calculations if needed
 
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
   double *q = atom->q;
   int nlocal = atom->nlocal;
 
@@ -440,6 +441,9 @@ void Ewald::compute(int eflag, int vflag)
     f[i][0] += qscale * q[i]*ek[i][0];
     f[i][1] += qscale * q[i]*ek[i][1];
     if (slabflag != 2) f[i][2] += qscale * q[i]*ek[i][2];
+    fcoul[i][0] += qscale * q[i]*ek[i][0];
+    fcoul[i][1] += qscale * q[i]*ek[i][1];
+    if (slabflag != 2) fcoul[i][2] += qscale * q[i]*ek[i][2];
   }
 
   // sum global energy across Kspace vevs and add in volume-dependent term
@@ -1218,8 +1222,12 @@ void Ewald::slabcorr()
 
   double ffact = qscale * (-4.0*MY_PI/volume);
   double **f = atom->f;
+  double **fcoul = atom->fcoul;
 
-  for (int i = 0; i < nlocal; i++) f[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+  for (int i = 0; i < nlocal; i++){
+    f[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+    fcoul[i][2] += ffact * q[i]*(dipole_all - qsum*x[i][2]);
+  }
 }
 
 /* ----------------------------------------------------------------------

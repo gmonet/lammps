@@ -207,6 +207,10 @@ Atom::Atom(LAMMPS *lmp) : Pointers(lmp)
 
   area = ed = em = epsilon = curvature = q_unscaled = nullptr;
 
+  // MY-CODE
+  x = v = f = NULL;
+  fcoul = NULL; // my code
+
   // end of customization section
   // --------------------------------------------------------------------
 
@@ -294,6 +298,7 @@ Atom::~Atom()
   memory->destroy(x);
   memory->destroy(v);
   memory->destroy(f);
+  memory->destroy(fcoul);
 
   // delete peratom data struct
 
@@ -547,6 +552,9 @@ void Atom::peratom_create()
   add_peratom("epsilon",&epsilon,DOUBLE,0);
   add_peratom("curvature",&curvature,DOUBLE,0);
   add_peratom("q_unscaled",&q_unscaled,DOUBLE,0);
+
+  // MY-CODE
+  add_peratom("fcoul",&fcoul,DOUBLE,3,1);
 
   // end of customization section
   // --------------------------------------------------------------------
@@ -2770,6 +2778,9 @@ void *Atom::extract(const char *name)
   if (strcmp(name,"curvature") == 0) return (void *) curvature;
   if (strcmp(name,"q_unscaled") == 0) return (void *) q_unscaled;
 
+  // MY-CODE
+  if (strcmp(name,"fcoul") == 0) return (void *) fcoul;
+
   // end of customization section
   // --------------------------------------------------------------------
 
@@ -2889,6 +2900,9 @@ int Atom::extract_datatype(const char *name)
   if (strcmp(name,"epsilon") == 0) return LAMMPS_DOUBLE;
   if (strcmp(name,"curvature") == 0) return LAMMPS_DOUBLE;
   if (strcmp(name,"q_unscaled") == 0) return LAMMPS_DOUBLE;
+
+  // MY-CODE
+  if (strcmp(name,"fcoul") == 0) return LAMMPS_DOUBLE_2D;
 
   // end of customization section
   // --------------------------------------------------------------------
